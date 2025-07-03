@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="./static/css/index.css">
     <script defer src="./static/js/index.min.js"></script>
+
 </head>
 <body>
 
@@ -47,7 +48,7 @@
             <span class="author-block">
               <a href="https://zhangwenyao1.github.io/">Wenyao Zhang<sup>124*</sup></a></span>,
             <span class="author-block">
-              <a href="https://qizekun.github.io/">Hongsi Liu<sup>26*</sup></a></span>,
+              <a href="https://qizekun.github.io/">Hongsi Liu<sup>27*</sup></a></span>,
             <span class="author-block">
               <a href="https://zhangwenyao1.github.io/">Zekun Qi<sup>34*</sup></a></span>,
             <span class="author-block">
@@ -58,7 +59,7 @@
             <span class="author-block">
               <a href="https://jzhzhang.github.io/">Jiazhao Zhang<sup>45</sup></a></span>,
             <span class="author-block">
-              <a href="https://runpeidong.web.illinois.edu/">Runpei Dong<sup>7</sup></a></span>,
+              <a href="https://runpeidong.web.illinois.edu/">Runpei Dong<sup>6</sup></a></span>,
             <span class="author-block">
               <a href="https://jiaweihe.com/">Jiawei He<sup>4</sup></a></span>,
             <br>
@@ -83,9 +84,10 @@
             <span class="author-block"><sup>2</sup>Eastern Institute of Technology</span>
             <span class="author-block"><sup>3</sup>Tsinghua University</span>
           <br>
-            <span class="author-block"><sup>3</sup>Galbot</span>
-            <span class="author-block"><sup>4</sup>Peking University</span>
-            <span class="author-block"><sup>5</sup>UIUC</span>
+            <span class="author-block"><sup>4</sup>Galbot</span>
+            <span class="author-block"><sup>5</sup>Peking University</span>
+            <span class="author-block"><sup>6</sup>University of Illinois Urbana-Champaign</span>
+            <span class="author-block"><sup>7</sup>University of Science and Technology of China</span>
           </div>
 
 
@@ -238,19 +240,12 @@
           <h2 class="title is-3">Abstract</h2>
           <div class="content has-text-justified" style="text-weight: bold;">
             <p>
-              Recent advances in vision-language-action (VLA) models have shown promise
-              in integrating image generation with action prediction to improve generalization
-              and reasoning in robot manipulation. However, existing methods are limited to
-              challenging image-based forecasting, which suffers from redundant information
-              and lacks comprehensive and critical world knowledge, including dynamic, spatial
-              and semantic information. To address these limitations, we propose DreamVLA,
-              a novel VLA framework that integrates comprehensive world knowledge fore-
-              casting to enable inverse dynamics modeling, thereby establishing a perception-
-              prediction-action loop for manipulation tasks. Specifically, DreamVLA introduces
-              a dynamic-region-guided world knowledge prediction, integrated with the spatial
-              and semantic cues, which provide compact yet comprehensive representations
-              for action planning. This design aligns with how humans interact with the world
-              by first forming abstract multimodal reasoning chains before acting. To mitigate
+              Recent advances in vision-language-action (VLA) models have shown promise in integrating image generation with action prediction to improve generalization
+              and reasoning in robot manipulation. However, existing methods are limited to challenging image-based forecasting, which suffers from redundant information
+              and lacks comprehensive and critical world knowledge, including dynamic, spatial and semantic information. To address these limitations, we propose DreamVLA,
+              a novel VLA framework that integrates comprehensive world knowledge forecasting to enable inverse dynamics modeling, thereby establishing a perception-prediction-action 
+              loop for manipulation tasks. Specifically, DreamVLA introduces a dynamic-region-guided world knowledge prediction, integrated with the spatial and semantic cues, 
+              which provide compact yet comprehensive representations for action planning. This design aligns with how humans interact with the world by first forming abstract multimodal reasoning chains before acting. To mitigate
               interference among the dynamic, spatial and semantic information during training,
               we adopt a block-wise structured attention mechanism that masks their mutual
               attention, preventing information leakage and keeping each representation clean
@@ -315,7 +310,7 @@
           <h2 class="title is-3">Comparison with previous VLA paradigm</h2>
 
           <div>
-            <img src="images/paradigm.png"
+            <img src="images/paradigm_compare.gif"
                  class="interpolation-image"
                  alt="Interpolation end reference image."/>
           </div>
@@ -325,7 +320,7 @@
       (a) Vanilla VLA directly maps visual observations and language instructions to actions. (b) Models leveraging separate
       image/video generation or copilot models to generate future frames or trajectories, subsequently guiding an action head.
       (c) VLA variants explicitly predict a subgoal image as an intermediate visual reasoning step prior to action generation.
-      (d) Our proposed \textbf{DreamVLA}, which explicitly predicts dynamic regions, depth map, semantics (DINOv2 and SAM)
+      (d) Our proposed DreamVLA, which explicitly predicts dynamic regions, depth map, semantics (DINOv2 and SAM)
       knowledge, significantly enhances the model's action reasoning and generalization.
           </h2>
 
@@ -340,18 +335,17 @@
         <h2 class="title is-3">Pipeline</h2>
   
         <div>
-          <img src="images/dreamvla.png" class="interpolation-image" alt="Interpolation end reference image." />
+          <img src="images/pipeline.gif" class="interpolation-image" alt="Interpolation end reference image." />
         </div>
   
         <h2 class="content has-text-justified">
-        Given the current robot state \(s_t\), observation \(o_t\), and language instruction, \method{} encodes multimodal
+        Given the current robot state, observation, and language instruction, DreamVLA encodes multimodal
         inputs via frozen text, visual encoders and a tunable state encoder.
-        These tokens, together with a learnable set of <\texttt{dream}> queries, are processed by a large language model to
-        produce \emph{world embedding}.
-        Three lightweight decoders then project each corresponding element of this embedding into the dynamics region $\hat
-        f_{t+n}$, monocular depth $\hat d_{t+n}$ and high-level semantics $\hat c_{t+n}$.
-        A separate <\texttt{action}> query draws a latent action embedding, which conditions a diffusion transformer that
-          refines Gaussian noise into an $n$-step action sequence $\hat{a}_{t:t+n-1}$.
+        These tokens, together with a learnable set of <<b>dream</b>> queries, are processed by a large language model to
+        produce world embedding.
+        Three lightweight decoders then project each corresponding element of this embedding into the dynamics region, monocular depth and high-level semantics.
+        A separate <<b>action</b>> query draws a latent action embedding, which conditions a diffusion transformer that
+          refines Gaussian noise into an n-step action sequence.
           The dashed box highlights prediction heads that are used only during training, inference skips these heads and
           operates directly on the world embedding.
         </h2>
@@ -364,32 +358,55 @@
   <div class="container is-fullhd">
     <div class="my-block">
       <div class="column is-full-width">
-        <h2 class="title is-3">Pipeline</h2>
+        <h2 class="title is-3">Dynamic Regions</h2>
   
         <div>
           <img src="images/dynamic_mask.png" class="interpolation-image" alt="Interpolation end reference image." />
         </div>
   
         <h2 class="content has-text-justified">
-          Given the current robot state \(s_t\), observation \(o_t\), and language instruction, \method{} encodes
-          multimodal
-          inputs via frozen text, visual encoders and a tunable state encoder.
-          These tokens, together with a learnable set of <\texttt{dream}> queries, are processed by a large language model
-            to
-            produce \emph{world embedding}.
-            Three lightweight decoders then project each corresponding element of this embedding into the dynamics region
-            $\hat
-            f_{t+n}$, monocular depth $\hat d_{t+n}$ and high-level semantics $\hat c_{t+n}$.
-            A separate <\texttt{action}> query draws a latent action embedding, which conditions a diffusion transformer
-              that
-              refines Gaussian noise into an $n$-step action sequence $\hat{a}_{t:t+n-1}$.
-              The dashed box highlights prediction heads that are used only during training, inference skips these heads
-              and
-              operates directly on the world embedding.
+          Visualization of dynamic regions over time.
+          We show the static camera (left) and wrist-mounted camera (right) observations alongside the corresponding dynamic masks
+          generated by our method at multiple time steps.
+          The masks highlight dynamic regions by leveraging optical flow trajectories extracted via
+          CoTracker.
+          Compared to the original observations, our method effectively suppresses irrelevant background and focuses on
+          interaction-relevant areas (e.g., moving objects and end-effector), enabling more structured and efficient action
+          reasoning.
         </h2>
   
       </div>
     </div>
+
+    <style>
+      /* 让宽度最多占容器的 60%，高度自适应 */
+      .interpolation-image-small {
+        margin-left: 20rem;           /* 自动占掉左侧空白 → 右移 */
+        margin-right: 2rem; 
+        max-width:40%;
+        height: auto;
+      }
+    </style>
+
+      <div class="container is-fullhd">
+        <div class="my-block">
+          <div class="column is-full-width">
+
+            <h2 class="title is-3">Block-wise Structured Attention</h2>
+      
+            <div>
+              <img src="images/attention.png" class="interpolation-image-small" alt="Interpolation end reference image." />
+            </div>
+            <h2 class="content has-text-justified">
+              To preserve clear modality bound-aries, <dream> is decomposed into three sub-queries (dynamic, depth and semantics). If these sub-queries could freely attend to one another,
+                high-frequency flow details would contaminate depth reasoning, and semantic cues might bleed into motion features, producing noisy mixed representations. We therefore mask their mutual
+                attention: each sub-query attends only to the shared visual, language, and state tokens, while  direct links among the three are disabled, keep-
+                ing their latent features disentangled and free of
+                cross-talk
+            </h2>
+      
+          </div>
+        </div>
 
 
 
@@ -399,8 +416,7 @@
           <h2 class="title is-3">CALVIN ABC-D Experiments</h2>
           <h2 class="content has-text-justified">
             We present the average success computed over 1000 rollouts
-            for each task and the average number of completed tasks to solve 5 instructions consecutively (Avg.
-            Len.). DreamVLA shows significant superiority over baselines. The best results are bolded
+            for each task and the average number of completed tasks to solve 5 instructions consecutively (Avg. Len.). DreamVLA shows significant superiority over baselines. The best results are bolde.
           </h2>
           <div>
             <img src="images/sim_exp.png" class="interpolation-image" alt="Interpolation end reference image." />
